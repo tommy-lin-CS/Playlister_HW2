@@ -3,7 +3,8 @@ import React from "react";
 export default class SongCard extends React.Component {
     constructor(props) {
         super(props);
-
+        
+        // STATE IS USED FOR "UPDATE" VARIABLES ONLY
         this.state = {
             isDragging: false,
             draggedTo: false

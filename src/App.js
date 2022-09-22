@@ -35,7 +35,7 @@ class App extends React.Component {
         // SETUP THE INITIAL STATE
         this.state = {
             listKeyPairMarkedForDeletion : null,
-            currentList : null,
+            currentList : null, // CURRENT LIST = CURRENTLY BEING EDITED
             sessionData : loadedSessionData
         }
     }
