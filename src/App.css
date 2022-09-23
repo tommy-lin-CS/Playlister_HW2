@@ -135,6 +135,8 @@ body {
 .list-card-button {
   float:right;
   font-size: 24pt;
+
+
 }
 
 .playlister-button, .playlister-button-disabled {
@@ -156,13 +158,15 @@ body {
 }
 
 .playlister-song, .playlister-song-dragged-to { 
-  display:flex;
+  display: flex;
   align-items: center;
   font-size: 32pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
   background-color: var(--swatch-complement);
+  align-content: flex-end;
+  justify-content: space-between;
 }
 
 .playlister-song:hover {
@@ -183,8 +187,21 @@ input {
   border-radius: 5px;
 }
 
+.bold {
+  font-weight: bold;
+}
 
+.song-card-button {
+  display: inline-block;
+  flex-direction: row;
+  align-content: flex-end;
+}
 
+.width {
+  display: inline-block;
+  align-content: flex-end;
+
+}
 
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
 
@@ -203,6 +220,8 @@ input {
   visibility: hidden;
   opacity: 0;
   transition: all 0.35s ease-in;
+  padding: 20%;
+
 }
 
 .modal.is-visible {
