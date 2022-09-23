@@ -159,7 +159,6 @@ body {
   display:flex;
   align-items: center;
   font-size: 32pt;
-  height:20%;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -168,6 +167,7 @@ body {
 
 .playlister-song:hover {
   background-color: black;
+  color: var(--swatch-complement);
 }
 
 input {

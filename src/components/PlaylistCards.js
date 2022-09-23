@@ -4,17 +4,17 @@ import React from "react";
 export default class PlaylistCards extends React.Component {
     render() {
         const { currentList, 
-                moveSongCallback, selected } = this.props;
+        moveSongCallback, /*selected*/ } = this.props;
         if (currentList === null) {
             return (
                 <div id="playlist-cards"></div>
             )
         }
         else {
-            let selectSong = "unselected-list-card";
-            if(selected) {
-                selectSong = "selected-list-card"
-            }
+            // let selectSong = "unselected-list-card";
+            // if(selected) {
+            //     selectSong = "selected-list-card"
+            // }
             return (
                 <div id="playlist-cards">
                     {
@@ -25,10 +25,13 @@ export default class PlaylistCards extends React.Component {
                                 key={'playlist-song-' + (index+1)}
                                 song={song}
                                 moveCallback={moveSongCallback}
+                                
                             />
                         ))
                     }
+                    
                 </div>
+                
             )
         }
     }
