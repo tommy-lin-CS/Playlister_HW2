@@ -13,13 +13,15 @@
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
 }
 
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
+
 body {
   background-color: var(--swatch-foundation);
 }
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: serif;
+  font-family: 'Tangerine', serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -109,7 +111,7 @@ body {
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
-  font-size: 18pt;
+  font-size: 32pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -132,12 +134,12 @@ body {
 
 .list-card-button {
   float:right;
-  font-size:18pt;
+  font-size: 24pt;
 }
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
-  border-width: 0px;
+  border-width: 1px;
   float:left;
   color: black;
   cursor: pointer;
@@ -163,6 +165,17 @@ body {
 input {
   font-size:20pt;
 }
+
+.toolbar-button {
+  font-size:36pt;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 2px 4px #888888;
+  border-radius: 5px;
+}
+
+
 
 
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
