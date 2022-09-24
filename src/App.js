@@ -7,10 +7,13 @@ import jsTPS from './common/jsTPS.js';
 
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction.js'
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction';
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
 import DeleteSongModal from './components/DeleteSongModal.js';
+import EditSongModal from './components/EditSongModal.js';
 
 // THESE REACT COMPONENTS ARE IN OUR UI
 import Banner from './components/Banner.js';
@@ -19,8 +22,7 @@ import PlaylistCards from './components/PlaylistCards.js';
 import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
-import AddSong_Transaction from './transactions/AddSong_Transaction.js'
-import DeleteSong_Transaction from './transactions/DeleteSong_Transaction';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -40,7 +42,9 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : null,
             songKeyPairMarkedForDeletion: null,
             currentList : null, // CURRENT LIST = CURRENTLY BEING EDITED
-            currentSong: null, // CURRENT SONG = CURRENLTY BEING EDITED
+            targetDeleteSong: null, // CURRENT SONG = CURRENLTY BEING DELTETED
+            songTitleMarkedForDeletion: "",
+            songIndexMarkedForDeletion: null,
             sessionData : loadedSessionData
         }
     }
@@ -242,8 +246,12 @@ class App extends React.Component {
     }
     // THIS FUNCTION ADDS A DeleteSong_Transaction TO THE TRANSACTION STACK
     deleteSongTransaction = (song, songIndex) => {
-        let transaction = new DeleteSong_Transaction(this, song, songIndex);
+        songIndex = this.state.songIndexMarkedForDeletion;
+        let songAtIndex = this.state.currentList.songs[songIndex];
+        let transaction = new DeleteSong_Transaction(this, songAtIndex.title, songAtIndex.artist, songAtIndex.youTubeId, songIndex);
+        console.log(songIndex);
         this.tps.addTransaction(transaction);
+        this.hideDeleteSongModal();
     }
 
     addSongTransaction = (song, songIndex) => {
@@ -303,7 +311,7 @@ class App extends React.Component {
     }
 
     // ADDS SONG
-    addSong = () => {
+    addNewSong = () => {
         let new_song = {title: "Untitled", artist: "Unknown",youTubeId: "dQw4w9WgXcQ"}
         let newCurrentList = this.state.currentList;
         newCurrentList.songs.push({title: new_song.title, artist: new_song.artist, youTubeId: new_song.youTubeId});
@@ -312,9 +320,27 @@ class App extends React.Component {
         }));
         this.db.mutationUpdateList(this.state.currentList);
     }
-    
-    deleteSong = () => {
-        
+
+    addOldSongBack = (songIndex, oldSongTitle, oldSongArtist, oldSongYoutubeId) => {
+        let song = {title: oldSongTitle, artist: oldSongArtist, youTubeId: oldSongYoutubeId}
+        this.state.currentList.songs.splice(songIndex, 0, song);
+        this.setStateWithUpdatedList(this.state.currentList);
+    }
+
+    markSongForDeletion = (index) => {
+        let title = this.state.currentList.songs[index].title;
+        this.setState(prevState => ({
+            songIndexMarkedForDeletion : index,
+            songTitleMarkedForDeletion : title,
+            sessionData : prevState.sessionData,
+        }),
+            // PROMPT THE USER
+            this.showDeleteSongModal())
+    }
+
+    deleteSong = (index) => {
+        this.state.currentList.songs.splice(index, 1);
+        this.setStateWithUpdatedList(this.state.currentList);
     }
 
     render() {
@@ -346,7 +372,7 @@ class App extends React.Component {
                 <PlaylistCards
                     currentList={this.state.currentList}
                     moveSongCallback={this.addMoveSongTransaction}
-                    deleteSongCallback={this.deleteSongTransaction} />
+                    deleteSongCallback={this.markSongForDeletion} />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteListModal
@@ -354,7 +380,9 @@ class App extends React.Component {
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                     deleteListCallback={this.deleteMarkedList} />
                 <DeleteSongModal
-                    deleteSongCallback={this.deleteMarkedSong} />
+                    songTitleMarkedForDeletion={this.state.songTitleMarkedForDeletion}
+                    hideDeleteSongModalCallback={this.hideDeleteSongModal}
+                    deleteSongCallback={this.deleteSongTransaction} />
             </div>
         );
     }

@@ -11,10 +11,6 @@ export default class PlaylistCards extends React.Component {
             )
         }
         else {
-            // let selectSong = "unselected-list-card";
-            // if(selected) {
-            //     selectSong = "selected-list-card"
-            // }
             return (
                 <div id="playlist-cards">
                     {
@@ -25,7 +21,7 @@ export default class PlaylistCards extends React.Component {
                                 key={'playlist-song-' + (index+1)}
                                 song={song}
                                 moveCallback={moveSongCallback}
-                                // deleteCallback={deleteSongCallback}
+                                deleteSongCallback={deleteSongCallback}
                             />
                         ))
                     }

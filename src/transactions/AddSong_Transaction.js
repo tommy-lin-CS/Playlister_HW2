@@ -15,8 +15,9 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
         this.songIndex = initSongIndex;
     }
 
+
     doTransaction() {
-        this.app.addSong(this.song);
+        this.app.addNewSong(this.song);
     }
     
     undoTransaction() {
