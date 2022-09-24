@@ -50,6 +50,9 @@ class App extends React.Component {
             sessionData : loadedSessionData
         }
     }
+/* ------------------------------------------------------------------------------------------------------------------ */
+    // ALL FUNCTIONS FOR LIST
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -214,9 +217,36 @@ class App extends React.Component {
             this.db.mutationUpdateList(this.state.currentList);
         });
     }
+    // THIS FUNCTION MARKS THE LIST FOR DELETION GIVEN KEYPAIR
+    markListForDeletion = (keyPair) => {
+        this.setState(prevState => ({
+            currentList: prevState.currentList,
+            listKeyPairMarkedForDeletion : keyPair,
+            sessionData: prevState.sessionData
+        }), () => {
+            // PROMPT THE USER
+            this.showDeleteListModal();
+        });
+    }
+    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
+    // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
+    showDeleteListModal() {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
+    }
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    hideDeleteListModal() {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+    }
+    // THIS FUNCTION GETS THE SIZE OF THE PLAYLIST
     getPlaylistSize = () => {
         return this.state.currentList.songs.length;
     }
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+    // MOVING SONGS
+
     // THIS FUNCTION MOVES A SONG IN THE CURRENT LIST FROM
     // start TO end AND ADJUSTS ALL OTHER ITEMS ACCORDINGLY
     moveSong(start, end) {
@@ -241,6 +271,10 @@ class App extends React.Component {
         }
         this.setStateWithUpdatedList(list);
     }
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+    // ALL FUNCTIONS FOR DEALING WITH TPS
+
     // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
     addMoveSongTransaction = (start, end) => {
         let transaction = new MoveSong_Transaction(this, start, end);
@@ -297,28 +331,7 @@ class App extends React.Component {
             this.db.mutationUpdateList(this.state.currentList);
         }
     }
-    // THIS FUNCTION MARKS THE LIST FOR DELETION GIVEN KEYPAIR
-    markListForDeletion = (keyPair) => {
-        this.setState(prevState => ({
-            currentList: prevState.currentList,
-            listKeyPairMarkedForDeletion : keyPair,
-            sessionData: prevState.sessionData
-        }), () => {
-            // PROMPT THE USER
-            this.showDeleteListModal();
-        });
-    }
-    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
-    // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
-    showDeleteListModal() {
-        let modal = document.getElementById("delete-list-modal");
-        modal.classList.add("is-visible");
-    }
-    // THIS FUNCTION IS FOR HIDING THE MODAL
-    hideDeleteListModal() {
-        let modal = document.getElementById("delete-list-modal");
-        modal.classList.remove("is-visible");
-    }
+    
 
 /* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR ADDING A SONG
@@ -423,15 +436,21 @@ class App extends React.Component {
 
 /* ------------------------------------------------------------------------------------------------------------------ */
     render() {
+        let canAddList = this.state.currentList == null;
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
+        if(this.state.currentList == null) {
+            canUndo = false;
+            canRedo = false;
+        }
         return (
             <div id="root">
                 <Banner />
                 <SidebarHeading
-                    createNewListCallback={this.createNewList} />
+                    createNewListCallback={this.createNewList}
+                    canAddList={!canAddList} />
                 <SidebarList
                     currentList={this.state.currentList}
                     keyNamePairs={this.state.sessionData.keyNamePairs}
@@ -439,10 +458,10 @@ class App extends React.Component {
                     loadListCallback={this.loadList}
                     renameListCallback={this.renameList} />
                 <EditToolbar
-                    canAddSong={canAddSong}
-                    canUndo={canUndo}
-                    canRedo={canRedo}
-                    canClose={canClose} 
+                    canAddSong={!canAddSong}
+                    canUndo={!canUndo}
+                    canRedo={!canRedo}
+                    canClose={!canClose} 
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList} 
