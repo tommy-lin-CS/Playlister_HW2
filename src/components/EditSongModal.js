@@ -17,7 +17,7 @@ export default class EditPlayListModal extends Component{
                     <div class="modal-edit-song">
                         <div>
                             <span>Title: </span>
-                            <input id="form-song-title" type="text" class="modal-song-content-input" />
+                            <input id="form-song-title" type="text" class="modal-song-content-input" value={title}/>
                         </div>
                         <div>
                             <span>Artist: </span>
