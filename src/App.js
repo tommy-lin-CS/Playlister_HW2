@@ -263,9 +263,20 @@ class App extends React.Component {
     }
 
     // THIS FUNCTION ADDS AN EditSong_Transaction TO THE TRANSACTION STACK
-    editSongTransaction = (song, songIndex) => {
-        let transaction = new EditSong_Transaction(this);
+    editSongTransaction = () => {
+        let oldSongTitle = this.state.currentList.songs[this.state.songIndexMarkedForEdit].title;
+        let oldSongArtist = this.state.currentList.songs[this.state.songIndexMarkedForEdit].artist;
+        let oldSongYoutubeId = this.state.currentList.songs[this.state.songIndexMarkedForEdit].youTubeId;
+
+        let newSongTitle = document.getElementById("form-song-title").value;
+        let newSongArtist = document.getElementById("form-song-artist").value;
+        let newSongYoutubeId = document.getElementById("form-song-ytid").value;
+
+        let transaction = new EditSong_Transaction(this, this.state.songIndexMarkedForEdit, 
+                                                    oldSongTitle, oldSongArtist, oldSongYoutubeId,
+                                                    newSongTitle, newSongArtist, newSongYoutubeId);
         this.tps.addTransaction(transaction);
+        this.hideEditSongModal();
     }
 
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING AN UNDO
@@ -310,6 +321,42 @@ class App extends React.Component {
     }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
+    // ALL FUNCTIONS FOR ADDING A SONG
+
+    // THIS FUNCTION ADDS A NEW SONG TO THE LIST WITH DEFAULT INFO
+    addNewSong = () => {
+        let new_song = {title: "Untitled", artist: "Unknown",youTubeId: "dQw4w9WgXcQ"}
+        let newCurrentList = this.state.currentList;
+        newCurrentList.songs.push({title: new_song.title, artist: new_song.artist, youTubeId: new_song.youTubeId});
+        this.setState(() => ({
+            currentList:newCurrentList
+        }));
+        this.db.mutationUpdateList(this.state.currentList);
+    }
+
+    // THIS FUNCTION ADDS A SONG WITH GIVEN INFO ON INDEX
+    // PURPOSE: REPLACES THE SONG INFO ON THE CURRENT INDEX. MAINLY USED FOR EDITING TRANSACTIONS!
+    addSongGivenAllComponentsOnIndex = (songIndex, songTitle, songArtist, songYoutubeId) => {
+        this.state.currentList.songs.splice(songIndex, 1, {
+            "title": songTitle,
+            "artist": songArtist,
+            "youTubeId": songYoutubeId
+        })
+        this.setStateWithUpdatedList(this.state.currentList);
+    }
+
+    // THIS FUNCTION ADDS A SONG WITH GIVEN INFO ON INDEX
+    // PURPOSE: ADDS NEW CARD WITH THE INFO
+    addSongGivenAllComponentsWithAdd = (songIndex, songTitle, songArtist, songYoutubeId) => {
+        this.state.currentList.songs.splice(songIndex, 0, {
+            "title": songTitle,
+            "artist": songArtist,
+            "youTubeId": songYoutubeId
+        })
+        this.setStateWithUpdatedList(this.state.currentList);
+    }
+
+/* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR DELETING A SONG
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
@@ -347,7 +394,6 @@ class App extends React.Component {
         this.setStateWithUpdatedList(this.state.currentList);
     }
 
-
 /* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR EDITING A SONG
 
@@ -364,32 +410,17 @@ class App extends React.Component {
     }
     // THIS FUNCTION MARKS THE SONG FOR EDITING
     markSongForEdit = (index) => {
+        document.getElementById("form-song-title").value = this.state.currentList.songs[index].title;
+        document.getElementById("form-song-artist").value = this.state.currentList.songs[index].artist;
+        document.getElementById("form-song-ytid").value = this.state.currentList.songs[index].youTubeId;
+
         this.setState(prevState => ({
             songIndexMarkedForEdit : index,
             sessionData : prevState.sessionData
         }),
             this.showEditSongModal)
     }
-/* ------------------------------------------------------------------------------------------------------------------ */
-    // ALL FUNCTIONS FOR ADDING A SONG
 
-    addNewSong = () => {
-        let new_song = {title: "Untitled", artist: "Unknown",youTubeId: "dQw4w9WgXcQ"}
-        let newCurrentList = this.state.currentList;
-        newCurrentList.songs.push({title: new_song.title, artist: new_song.artist, youTubeId: new_song.youTubeId});
-        this.setState(() => ({
-            currentList:newCurrentList
-        }));
-        this.db.mutationUpdateList(this.state.currentList);
-    }
-
-    addOldSongBack = (songIndex, oldSongTitle, oldSongArtist, oldSongYoutubeId) => {
-        let song = {title: oldSongTitle, artist: oldSongArtist, youTubeId: oldSongYoutubeId}
-        this.state.currentList.songs.splice(songIndex, 0, song);
-        this.setStateWithUpdatedList(this.state.currentList);
-    }
-
-    
 /* ------------------------------------------------------------------------------------------------------------------ */
     render() {
         let canAddSong = this.state.currentList !== null;
@@ -433,7 +464,7 @@ class App extends React.Component {
                     hideDeleteSongModalCallback={this.hideDeleteSongModal}
                     deleteSongCallback={this.deleteSongTransaction} />
                 <EditSongModal
-                    editSongModalCallback={this.showEditSongModal}
+                    editSongModalCallback={this.editSongTransaction}
                     hideEditSongModalCallback={this.hideEditSongModal} />
             </div>
         );

@@ -22,10 +22,10 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.app.moveSong(this.oldSongIndex, this.newSongIndex);
+        this.app.addSongGivenAllComponentsOnIndex(this.songIndex, this.newSongTitle, this.newSongArtist, this.newSongYoutubeId);
     }
     
     undoTransaction() {
-        this.app.moveSong(this.newSongIndex, this.oldSongIndex);
+        this.app.addSongGivenAllComponentsOnIndex(this.songIndex, this.oldSongTitle, this.oldSongArtist, this.oldSongYoutubeId);
     }
 }

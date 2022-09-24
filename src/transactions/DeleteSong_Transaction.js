@@ -22,6 +22,6 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     }
     
     undoTransaction() {
-        this.app.addOldSongBack(this.songIndex, this.title, this.artist, this.youtubeId);
+        this.app.addSongGivenAllComponentsWithAdd(this.songIndex, this.title, this.artist, this.youtubeId);
     }
 }
