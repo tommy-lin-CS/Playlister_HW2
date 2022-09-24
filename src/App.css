@@ -208,7 +208,6 @@ input {
   opacity: 0;
   transition: all 0.35s ease-in;
   padding: 20%;
-
 }
 
 .modal.is-visible {
@@ -281,7 +280,8 @@ span {
   font-size: 20pt;
 }
 
-#title-prompt {
+/* NEVER USED */
+/* #title-prompt {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
 }
@@ -309,7 +309,7 @@ span {
 #edit-song-modal-youTubeId-textfield {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
-}
+} */
 
 .confirm-cancel-box {
   grid-column: 1 / 3;
@@ -325,6 +325,40 @@ span {
 
 .modal p + p {
   margin-top: 1rem;
+}
+
+.modal-song-north {
+  font-size: 26pt;
+  font-weight: bold;
+  background-color: #669966;
+  color:white;
+}
+
+.modal-edit-song {
+  display: inline-block;
+  width: 350px;
+  font-size: 22pt;
+  padding-top: 10px;
+}
+
+.modal-song-content-input {
+  float: right;
+  font-size: 20px;
+  padding: 0;
+}
+
+.song-modal-button {
+  margin: 5px;
+  font-size: 20px;
+}
+
+.modal-song-south {
+  display:flex;
+  flex-direction: row;
+  background-color: lightgray;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
 }
 
 /* ANIMATIONS
