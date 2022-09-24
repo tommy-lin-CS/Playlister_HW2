@@ -309,6 +309,17 @@ class App extends React.Component {
         let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
+    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
+    // TO SEE IF THEY WANT TO EDIT THE CONTENT OF THE SONG
+    showEditSongModal() {
+        let modal = document.getElementById("edit-song-modal");
+        modal.classList.add("is-visible");
+    }
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    hideEditSongModal() {
+        let modal = document.getElementById("edit-song-modal");
+        modal.classList.remove("is-visible");
+    }
 
     // ADDS SONG
     addNewSong = () => {
@@ -340,8 +351,17 @@ class App extends React.Component {
 
     deleteSong = (index) => {
         this.state.currentList.songs.splice(index, 1);
+        console.log(index);
+
         this.setStateWithUpdatedList(this.state.currentList);
     }
+
+    deleteLastSong = () => {
+        this.state.currentList.songs.splice(this.state.currentList.songs.length - 1, 1);
+        this.setStateWithUpdatedList(this.state.currentList);
+    }
+
+
 
     render() {
         let canAddSong = this.state.currentList !== null;
@@ -383,6 +403,8 @@ class App extends React.Component {
                     songTitleMarkedForDeletion={this.state.songTitleMarkedForDeletion}
                     hideDeleteSongModalCallback={this.hideDeleteSongModal}
                     deleteSongCallback={this.deleteSongTransaction} />
+                <EditSongModal
+                    hideEditSongModalCallback={this.EditSongModal} />
             </div>
         );
     }

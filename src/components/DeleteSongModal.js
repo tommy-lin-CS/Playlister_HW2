@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 export default class DeleteSongModal extends Component {
-    render() { // NOT DONE
+    render() {
         const { songTitleMarkedForDeletion, deleteSongCallback, hideDeleteSongModalCallback } = this.props;
         
 

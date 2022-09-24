@@ -21,6 +21,6 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
     }
     
     undoTransaction() {
-        this.app.deleteSong(this.songIndex);
+        this.app.deleteLastSong();
     }
 }
