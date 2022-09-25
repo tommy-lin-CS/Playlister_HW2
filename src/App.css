@@ -152,7 +152,8 @@ body {
   font-size: 24pt;
 }
 
-.toolbar-button-disabled {
+/* NEVER USED */
+/* .toolbar-button-disabled {
   font-size:36pt;
   border-width: 1px;
   border-color: black;
@@ -162,7 +163,7 @@ body {
   float:left;
   opacity: 0.25;
   cursor: pointer;
-}
+} */
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;

@@ -388,8 +388,6 @@ class App extends React.Component {
     showDeleteSongModal() {
         // FOOLPROOF
         document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[1].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[2].disabled = true;
         document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
 
         let modal = document.getElementById("delete-song-modal");
@@ -436,8 +434,6 @@ class App extends React.Component {
     showEditSongModal() {
         // FOOLPROOF
         document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[1].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[2].disabled = true;
         document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
         console.log(this.tps.hasTransactionToUndo());
         let modal = document.getElementById("edit-song-modal");
