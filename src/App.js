@@ -38,6 +38,7 @@ class App extends React.Component {
         // GET THE SESSION DATA FROM OUR DATA MANAGER
         let loadedSessionData = this.db.queryGetSessionData();
 
+        this.isFlag = false;
         // SETUP THE INITIAL STATE
         this.state = {
             listKeyPairMarkedForDeletion : null,
@@ -332,6 +333,15 @@ class App extends React.Component {
         }
     }
     
+    // THIS HANDLER HANDLES CTRL-Z & CTRL-Y
+    handleKeyDown = (event) => {
+        if (event.ctrlKey && event.keyCode === 90) {
+            this.undo();
+        }
+        else if (event.ctrlKey && event.keyCode === 89) {
+            this.redo();
+        }
+    }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR ADDING A SONG
@@ -433,9 +443,12 @@ class App extends React.Component {
         }),
             this.showEditSongModal)
     }
-
+    
+    
 /* ------------------------------------------------------------------------------------------------------------------ */
     render() {
+        
+        
         let canAddList = this.state.currentList == null;
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
@@ -445,8 +458,9 @@ class App extends React.Component {
             canUndo = false;
             canRedo = false;
         }
+        
         return (
-            <div id="root">
+            <div id="root" tabIndex="0" onKeyDown={this.handleKeyDown}>
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}

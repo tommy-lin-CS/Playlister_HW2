@@ -16,7 +16,7 @@ export default class PlaylistCards extends React.Component {
                     {
                         currentList.songs.map((song, index) => (
                             <SongCard
-                                class={'list-card'}
+                                className={'list-card'}
                                 id={'playlist-song-' + (index+1)}
                                 key={'playlist-song-' + (index+1)}
                                 song={song}

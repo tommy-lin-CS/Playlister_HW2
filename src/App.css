@@ -117,6 +117,10 @@ body {
   border-radius: 25px;
 }
 
+#sidebar-list > input{
+  font-size: 12pt;
+}
+
 .unselected-list-card:hover {
   cursor: pointer;
   background-color: var(--swatch-contrast);
@@ -174,7 +178,7 @@ body {
 }
 
 input {
-  font-size:20pt;
+  font-size: 20pt;
 }
 
 .toolbar-button {
