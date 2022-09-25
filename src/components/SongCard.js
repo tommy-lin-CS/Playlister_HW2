@@ -91,12 +91,10 @@ export default class SongCard extends React.Component {
                 draggable="true"
                 onDoubleClick={this.handleEditSong}
             >
-              <div>{num}. <a href={link}>{song.title} by {song.artist}</a></div>
-                
-                
+              <div>{num}.<a href={link}>{song.title} by {song.artist}</a></div>
                 <input
                     type="button"
-                    className="list-card-button"
+                    className="song-card-button"
                     id={"delete-song-" + num}
                     onClick={this.handleDeleteSong}
                     value={"X"} 

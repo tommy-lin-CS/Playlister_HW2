@@ -60,6 +60,7 @@ class App extends React.Component {
             return keyPair1.name.localeCompare(keyPair2.name);
         });
     }
+
     // THIS FUNCTION BEGINS THE PROCESS OF CREATING A NEW LIST
     createNewList = () => {
         // FIRST FIGURE OUT WHAT THE NEW LIST'S KEY AND NAME WILL BE
@@ -385,11 +386,21 @@ class App extends React.Component {
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE SONG
     showDeleteSongModal() {
+        // FOOLPROOF
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[1].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[2].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
+
         let modal = document.getElementById("delete-song-modal");
         modal.classList.add("is-visible");
     }
     // THIS FUNCTION IS FOR HIDING THE MODAL
     hideDeleteSongModal() {
+        // FOOLPROOF
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = false;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = false;
+
         let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
@@ -423,11 +434,20 @@ class App extends React.Component {
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY WANT TO EDIT THE CONTENT OF THE SONG
     showEditSongModal() {
+        // FOOLPROOF
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[1].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[2].disabled = true;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
+        console.log(this.tps.hasTransactionToUndo());
         let modal = document.getElementById("edit-song-modal");
         modal.classList.add("is-visible");
     }
     // THIS FUNCTION IS FOR HIDING THE MODAL
     hideEditSongModal() {
+        // FOOLPROOF
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = false;
+        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = false;
         let modal = document.getElementById("edit-song-modal");
         modal.classList.remove("is-visible");
     }
@@ -444,11 +464,8 @@ class App extends React.Component {
             this.showEditSongModal)
     }
     
-    
 /* ------------------------------------------------------------------------------------------------------------------ */
-    render() {
-        
-        
+    render() { 
         let canAddList = this.state.currentList == null;
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
@@ -459,8 +476,9 @@ class App extends React.Component {
             canRedo = false;
         }
         
+
         return (
-            <div id="root" tabIndex="0" onKeyDown={this.handleKeyDown}>
+            <div id="inner-root" tabIndex="0" onKeyDown={this.handleKeyDown}>
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}
@@ -497,6 +515,7 @@ class App extends React.Component {
                     hideDeleteSongModalCallback={this.hideDeleteSongModal}
                     deleteSongCallback={this.deleteSongTransaction} />
                 <EditSongModal
+                    canAddSong={!canAddSong}
                     editSongModalCallback={this.editSongTransaction}
                     hideEditSongModalCallback={this.hideEditSongModal} />
             </div>
