@@ -45,11 +45,16 @@ class App extends React.Component {
             songKeyPairMarkedForDeletion: null,
             currentList : null, // CURRENT LIST = CURRENTLY BEING EDITED
             targetDeleteSong: null, // CURRENT SONG = CURRENLTY BEING DELTETED
-            songTitleMarkedForDeletion: "",
+            songTitleMarkedForDeletion: null,
             songIndexMarkedForDeletion: null,
-            songIndexMarkedForEdit: null,
+            songIndexMarkedForEdit: null, 
+            modalOpen: false, // BOOLEAN FOR WHEN MODAL IS OPENED
             sessionData : loadedSessionData
         }
+
+        this.hideEditSongModal = this.hideEditSongModal.bind(this)
+        this.hideDeleteSongModal = this.hideDeleteSongModal.bind(this)
+
     }
 /* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR LIST
@@ -283,7 +288,7 @@ class App extends React.Component {
         this.tps.addTransaction(transaction);
     }
     // THIS FUNCTION ADDS A DeleteSong_Transaction TO THE TRANSACTION STACK
-    deleteSongTransaction = (song, songIndex) => {
+    deleteSongTransaction = (songIndex) => {
         songIndex = this.state.songIndexMarkedForDeletion;
         let songAtIndex = this.state.currentList.songs[songIndex];
         let transaction = new DeleteSong_Transaction(this, songAtIndex.title, songAtIndex.artist, songAtIndex.youTubeId, songIndex);
@@ -387,18 +392,21 @@ class App extends React.Component {
     // TO SEE IF THEY REALLY WANT TO DELETE SONG
     showDeleteSongModal() {
         // FOOLPROOF
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
-
+        this.setState(prevState => ({
+            modalOpen: true,
+            sessionData: prevState.sessionData
+        }));
         let modal = document.getElementById("delete-song-modal");
         modal.classList.add("is-visible");
     }
+    
     // THIS FUNCTION IS FOR HIDING THE MODAL
     hideDeleteSongModal() {
         // FOOLPROOF
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = false;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = false;
-
+        this.setState(prevState => ({
+            modalOpen: false,
+            sessionData: prevState.sessionData
+        }));
         let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
@@ -416,8 +424,6 @@ class App extends React.Component {
     // THIS FUNCTION DELETES THE SONG GIVEN THE INDEX
     deleteSong = (index) => {
         this.state.currentList.songs.splice(index, 1);
-        console.log(index);
-
         this.setStateWithUpdatedList(this.state.currentList);
     }
     // THIS FUNCTION DELETES THE LAST SONG OF THE PLAYLIST
@@ -429,24 +435,6 @@ class App extends React.Component {
 /* ------------------------------------------------------------------------------------------------------------------ */
     // ALL FUNCTIONS FOR EDITING A SONG
 
-    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
-    // TO SEE IF THEY WANT TO EDIT THE CONTENT OF THE SONG
-    showEditSongModal() {
-        // FOOLPROOF
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = true;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = true;
-        console.log(this.tps.hasTransactionToUndo());
-        let modal = document.getElementById("edit-song-modal");
-        modal.classList.add("is-visible");
-    }
-    // THIS FUNCTION IS FOR HIDING THE MODAL
-    hideEditSongModal() {
-        // FOOLPROOF
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[0].disabled = false;
-        document.getElementById("edit-toolbar").getElementsByTagName('input')[3].disabled = false;
-        let modal = document.getElementById("edit-song-modal");
-        modal.classList.remove("is-visible");
-    }
     // THIS FUNCTION MARKS THE SONG FOR EDITING
     markSongForEdit = (index) => {
         document.getElementById("form-song-title").value = this.state.currentList.songs[index].title;
@@ -457,22 +445,57 @@ class App extends React.Component {
             songIndexMarkedForEdit : index,
             sessionData : prevState.sessionData
         }),
-            this.showEditSongModal)
+        this.showEditSongModal)
+    }
+
+    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
+    // TO SEE IF THEY WANT TO EDIT THE CONTENT OF THE SONG
+    showEditSongModal() {
+        // FOOLPROOF
+        this.setState(prevState => ({
+            modalOpen: true,
+            sessionData: prevState.sessionData
+        }));
+        let modal = document.getElementById("edit-song-modal");
+        modal.classList.add("is-visible");
+    }
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    hideEditSongModal() {
+        // FOOLPROOF
+        this.setState(prevState => ({
+            modalOpen: false,
+            sessionData: prevState.sessionData
+        }));
+        let modal = document.getElementById("edit-song-modal");
+        modal.classList.remove("is-visible");
     }
     
 /* ------------------------------------------------------------------------------------------------------------------ */
     render() { 
-        let canAddList = this.state.currentList == null;
+        let canAddList = this.state.currentList === null;
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
+
+        if (this.state.modalOpen) {
+            canUndo = false;
+            canRedo = false;
+            canAddSong = false;
+            canClose = false;
+        }
+        else {
+            canAddSong = this.state.currentList !== null;
+            canUndo = this.tps.hasTransactionToUndo();
+            canRedo = this.tps.hasTransactionToRedo();
+            canClose = this.state.currentList !== null;
+        }
+        
         if(this.state.currentList == null) {
             canUndo = false;
             canRedo = false;
         }
         
-
         return (
             <div id="inner-root" tabIndex="0" onKeyDown={this.handleKeyDown}>
                 <Banner />
