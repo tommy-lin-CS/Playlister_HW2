@@ -42,17 +42,19 @@ export default class SongCard extends React.Component {
         event.preventDefault();
         let target = event.target;
         let targetId = target.id;
-        targetId = targetId.substring(target.id.indexOf("-") + 1);
-        let sourceId = event.dataTransfer.getData("song");
-        sourceId = sourceId.substring(sourceId.indexOf("-") + 1);
-        
-        this.setState(prevState => ({
-            isDragging: false,
-            draggedTo: false
-        }));
-
-        // ASK THE MODEL TO MOVE THE DATA
-        this.props.moveCallback(sourceId, targetId);
+        if (targetId !== "") {
+            targetId = targetId.substring(target.id.indexOf("-") + 1);
+            let sourceId = event.dataTransfer.getData("song");
+            sourceId = sourceId.substring(sourceId.indexOf("-") + 1);
+            
+            this.setState(prevState => ({
+                isDragging: false,
+                draggedTo: false
+            }));
+    
+            // ASK THE MODEL TO MOVE THE DATA
+            this.props.moveCallback(sourceId, targetId);
+        }
     }
 
     handleDeleteSong = (event) => {
